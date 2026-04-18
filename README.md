@@ -1,7 +1,7 @@
 # Bon Iver (everywhere)
 
 <p>
-  <q>I'm lost in the woods, I'm down on my mind </q><br>
+  <q>I'm up in the woods, I'm down on my mind </q><br>
   <em>Lost in the World</em> — Kanye West (feat. Bon Iver)
 </p>
 
