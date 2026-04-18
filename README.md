@@ -1,8 +1,8 @@
 # Bon Iver (everywhere)
 
 <p>
-  <q>Cause dead right can go wrong</q><br>
-  <em>Friends</em> — Francis and the Lights (feat. Bon Iver)
+  <q>I'm lost in the woods, I'm down on my mind </q><br>
+  <em>Lost in the World</em> — Kanye West (feat. Bon Iver)
 </p>
 
 ### Where is Bon Iver?
@@ -15,7 +15,7 @@ a project by Lily Holmes
 
 Can artist connectivity be modeled through graph based methods? 
 
-An exploration of music, , and networks. 
+An exploration of music, genre, and networks. 
 
 **Stack:** `python`, `pandas`, `numpy`, `networkx`  
 **Tools:** `ChatGPT`, `Codex`  
