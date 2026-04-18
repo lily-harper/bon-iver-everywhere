@@ -1,16 +1,21 @@
 # Bon Iver (everywhere)
 
-###  Bon Iver in indie folk, Bon Iver in hip hop, Bon Iver is everywhere.
+<p>
+  <q>Cause dead right can go wrong</q><br>
+  <em>Friends</em> — Francis and the Lights (feat. Bon Iver)
+</p>
 
-### Lily Holmes
+### Where is Bon Iver?
 
-Does Bon Iver serve as a link between distinct genres? Which artists has Bon Iver collaborated with? What genres are represented in Bon Iver's discography? 
+a project by Lily Holmes
 
-Can we model artist connectivity through graph based methods? 
+* Does Bon Iver serve as a link between distinct genres? 
+* Which artists has Bon Iver collaborated with? 
+* What genres are represented in Bon Iver's discography? 
+
+Can artist connectivity be modeled through graph based methods? 
 
 An exploration of music, , and networks. 
 
-stack: `python` -> `pandas`, `numpy`, `networkx`
-
-`OpenAI` -> `ChatGPT`, `CODEX` 
-(or) `anthropic` -> `claude`
+**Stack:** `python`, `pandas`, `numpy`, `networkx`  
+**Tools:** `ChatGPT`, `Codex`  
