@@ -37,3 +37,8 @@ stack-data==0.6.3
 tornado==6.5.5
 traitlets==5.14.3
 wcwidth==0.6.0
+networkx==3.6.1
+plotly==6.5.2
+python-dotenv==1.2.1
+requests==2.32.5
+scipy==1.17.1
