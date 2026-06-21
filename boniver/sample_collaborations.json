@@ -1,0 +1,157 @@
+[
+  {
+    "song_title": "Lost in the World",
+    "song_id": "sample-1",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Kanye West", "role": "performer", "song_title": "Lost in the World", "source": "sample"},
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "Lost in the World", "source": "sample"},
+      {"artist_name": "Bon Iver", "role": "writer", "song_title": "Lost in the World", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "Monster",
+    "song_id": "sample-2",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Kanye West", "role": "performer", "song_title": "Monster", "source": "sample"},
+      {"artist_name": "Bon Iver", "role": "writer", "song_title": "Monster", "source": "sample"},
+      {"artist_name": "Jay-Z", "role": "performer", "song_title": "Monster", "source": "sample"},
+      {"artist_name": "Nicki Minaj", "role": "performer", "song_title": "Monster", "source": "sample"},
+      {"artist_name": "Rick Ross", "role": "performer", "song_title": "Monster", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "Rosyln",
+    "song_id": "sample-3",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "Rosyln", "source": "sample"},
+      {"artist_name": "St. Vincent", "role": "performer", "song_title": "Rosyln", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "No One Is Lost",
+    "song_id": "sample-4",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "No One Is Lost", "source": "sample"},
+      {"artist_name": "The National", "role": "performer", "song_title": "No One Is Lost", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "Fall Creek Boys Choir",
+    "song_id": "sample-5",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "Fall Creek Boys Choir", "source": "sample"},
+      {"artist_name": "James Blake", "role": "performer", "song_title": "Fall Creek Boys Choir", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "I Need a Forest Fire",
+    "song_id": "sample-6",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "James Blake", "role": "performer", "song_title": "I Need a Forest Fire", "source": "sample"},
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "I Need a Forest Fire", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "Phenom",
+    "song_id": "sample-7",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "Phenom", "source": "sample"},
+      {"artist_name": "Bon Iver", "role": "writer", "song_title": "Phenom", "source": "sample"},
+      {"artist_name": "Flock of Dimes", "role": "performer", "song_title": "Phenom", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "Jelmore",
+    "song_id": "sample-8",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "Jelmore", "source": "sample"},
+      {"artist_name": "Bon Iver", "role": "writer", "song_title": "Jelmore", "source": "sample"},
+      {"artist_name": "Jenn Wasner", "role": "writer", "song_title": "Jelmore", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "Naeem",
+    "song_id": "sample-9",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "Naeem", "source": "sample"},
+      {"artist_name": "Bon Iver", "role": "writer", "song_title": "Naeem", "source": "sample"},
+      {"artist_name": "Flock of Dimes", "role": "writer", "song_title": "Naeem", "source": "sample"},
+      {"artist_name": "Jenn Wasner", "role": "writer", "song_title": "Naeem", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "exile",
+    "song_id": "sample-10",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Taylor Swift", "role": "performer", "song_title": "exile", "source": "sample"},
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "exile", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "Woods",
+    "song_id": "sample-11",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "Woods", "source": "sample"},
+      {"artist_name": "Kanye West", "role": "producer", "song_title": "Woods", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "Beth/Rest",
+    "song_id": "sample-12",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "Beth/Rest", "source": "sample"},
+      {"artist_name": "The Staves", "role": "performer", "song_title": "Beth/Rest", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "Salem",
+    "song_id": "sample-13",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "Salem", "source": "sample"},
+      {"artist_name": "The Staves", "role": "performer", "song_title": "Salem", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "Minnesota, WI",
+    "song_id": "sample-14",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "Minnesota, WI", "source": "sample"},
+      {"artist_name": "The Staves", "role": "performer", "song_title": "Minnesota, WI", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "Big Red Machine",
+    "song_id": "sample-15",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "Big Red Machine", "source": "sample"},
+      {"artist_name": "The National", "role": "performer", "song_title": "Big Red Machine", "source": "sample"},
+      {"artist_name": "Aaron Dessner", "role": "writer", "song_title": "Big Red Machine", "source": "sample"}
+    ]
+  },
+  {
+    "song_title": "Latter Days",
+    "song_id": "sample-16",
+    "source": "sample",
+    "collaborators": [
+      {"artist_name": "Big Red Machine", "role": "performer", "song_title": "Latter Days", "source": "sample"},
+      {"artist_name": "Bon Iver", "role": "performer", "song_title": "Latter Days", "source": "sample"},
+      {"artist_name": "The National", "role": "performer", "song_title": "Latter Days", "source": "sample"},
+      {"artist_name": "Taylor Swift", "role": "performer", "song_title": "Latter Days", "source": "sample"}
+    ]
+  }
+]
