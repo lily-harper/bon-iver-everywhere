@@ -24,6 +24,8 @@ def main():
     collab_df = clean_collaborations(raw_df)
     save_data(collab_df, filename=COLLABORATIONS_CSV.name, directory=COLLABORATIONS_CSV.parent)
 
+    print(f"Cleaned to {len(collab_df)} edges within 2 hops of Bon Iver")
+
     collab_df, matrix, graph, artists_df = build_graph_outputs(
         collaborations_path=COLLABORATIONS_CSV,
         edges_path=EDGES_CSV,

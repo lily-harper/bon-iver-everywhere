@@ -60,18 +60,25 @@ def is_valid_song(song_info, exclude_terms):
     title = song_info.get("title") or ""
     if not title or should_skip_song(title, exclude_terms):
         return False
-    if title.startswith("#"):
+    if title.startswith("#") or "tracklist" in title.lower():
         return False
 
     primary_name = (song_info.get("primary_artist") or {}).get("name", "")
     if is_junk_artist(primary_name):
         return False
 
-    featured_artists = song_info.get("featured_artists") or []
-    if not featured_artists:
-        return False
+    has_credits = any(
+        song_info.get(field)
+        for field in ("featured_artists", "producer_artists", "writer_artists")
+    )
+    return has_credits
 
-    return True
+
+CREDIT_FIELDS = (
+    ("featured_artists", "featured"),
+    ("producer_artists", "producer"),
+    ("writer_artists", "writer"),
+)
 
 
 def pull_settings(genius):
@@ -188,17 +195,27 @@ def extract_edges_from_song(song_info):
     }
 
     rows = []
-    for featured in song_info.get("featured_artists") or []:
-        featured_name = featured.get("name")
-        if not featured_name or featured_name == primary_name:
-            continue
-        rows.append(
-            {
-                **base,
-                "source_artist": primary_name,
-                "target_artist": featured_name,
-            }
-        )
+    seen = set()
+
+    for field, role in CREDIT_FIELDS:
+        for credit_artist in song_info.get(field) or []:
+            credit_name = credit_artist.get("name")
+            if not credit_name or credit_name == primary_name:
+                continue
+
+            key = (base["track_title"], primary_name, credit_name, role)
+            if key in seen:
+                continue
+            seen.add(key)
+
+            rows.append(
+                {
+                    **base,
+                    "source_artist": primary_name,
+                    "target_artist": credit_name,
+                    "role": role,
+                }
+            )
 
     return rows
 
@@ -238,14 +255,21 @@ def clean_collaborations(collab_df, hub_artist=HUB_ARTIST, hops=2):
         return collab_df
 
     cleaned = collab_df.copy()
+    if "role" not in cleaned.columns:
+        cleaned["role"] = "featured"
+
     cleaned = cleaned[
         ~cleaned["source_artist"].map(is_junk_artist)
         & ~cleaned["target_artist"].map(is_junk_artist)
+        & ~cleaned["track_title"].str.lower().str.contains("tracklist", na=False)
     ]
 
     cleaned = (
         cleaned.sort_values(["track_title", "release_year"], na_position="last")
-        .drop_duplicates(subset=["track_title", "source_artist", "target_artist"], keep="first")
+        .drop_duplicates(
+            subset=["track_title", "source_artist", "target_artist", "role"],
+            keep="first",
+        )
         .reset_index(drop=True)
     )
 
