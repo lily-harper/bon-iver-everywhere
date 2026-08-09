@@ -5,11 +5,12 @@
   <title>Bon Iver Collaboration Network</title>
   <style>
     body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #111; color: #eee; }
-    #layout { display: flex; height: 100vh; }
-    #plot-wrap { flex: 1; min-width: 0; }
+    #layout { height: 100vh; }
+    #plot-wrap { width: calc(100vw - 320px); height: 100vh; overflow: hidden; }
     #panel {
+      position: fixed; z-index: 1000; top: 0; right: 0; bottom: 0;
       width: 320px; padding: 20px; background: #1a1a1a; border-left: 1px solid #333;
-      overflow-y: auto; box-sizing: border-box;
+      overflow-y: auto; box-sizing: border-box; contain: layout paint;
     }
     #panel h2 { margin: 0 0 8px; font-size: 1.1rem; }
     #panel .subtitle { color: #aaa; font-size: 0.85rem; margin-bottom: 16px; }
@@ -26,6 +27,16 @@
     .controls { display: flex; gap: 8px; margin-bottom: 10px; }
     .genre-key { display: grid; grid-template-columns: 14px 1fr; gap: 6px 8px; align-items: center; }
     .genre-key span { width: 12px; height: 12px; border-radius: 50%; }
+    .genre-legend {
+      position: sticky; z-index: 2; top: -20px; margin: 0 -20px 16px; padding: 12px 20px;
+      background: #1a1a1a; border-bottom: 1px solid #333;
+    }
+    .genre-legend h3 { margin: 0 0 8px; color: #eee; }
+    @media (max-width: 760px) {
+      #plot-wrap { width: 100vw; height: 70vh; }
+      #panel { position: absolute; top: 70vh; width: 100%; min-height: 30vh; border-left: 0; border-top: 1px solid #333; }
+      .genre-legend { position: relative; top: auto; }
+    }
   </style>
 </head>
 <body>
@@ -39,7 +50,7 @@
         <button id="reset-view" type="button">Reset view</button>
       </div>
       <p class="subtitle">Drag to rotate. Use the wheel or trackpad to zoom quickly.</p>
-      <div class="legend">
+      <div class="legend genre-legend">
         <h3>Node colors</h3>
         <div class="genre-key"><span style="background:#E45756"></span><div>Hip-hop / Rap</div><span style="background:#B279A2"></span><div>R&amp;B / Soul</div><span style="background:#F2CF5B"></span><div>Pop</div><span style="background:#4C78A8"></span><div>Rock / Alternative</div><span style="background:#59A14F"></span><div>Folk / Country</div><span style="background:#76B7B2"></span><div>Electronic / Dance</div><span style="background:#FF9DA7"></span><div>Jazz / Classical</div><span style="background:#F28E2B"></span><div>Global / Reggae</div><span style="background:#9C755F"></span><div>Experimental / Soundtrack</div><span style="background:#79706E"></span><div>Other / Unknown</div></div>
         <p>First-hop line width = number of shared recordings. Line length increases with the collaborator's downstream connections.</p>

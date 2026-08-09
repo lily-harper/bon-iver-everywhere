@@ -1,0 +1,50 @@
+song_id,review_status,track_title,release_year,collaborator,primary_artist_from_source,bon_iver_role_from_source,collaborator_role_from_source,genius_url,automated_flags
+13164233,accepted,"WE (Xcel Energy Center, St Paul, MN. Oct 03 2019)",2026,Bizhiki,Bon Iver,primary_artist,featured,https://genius.com/Bon-iver-we-xcel-energy-center-st-paul-mn-oct-03-2019-lyrics,alternate_or_live_version
+12471803,accepted,I Want You Gone,2025,Cole Davis,Cole Davis,featured,primary_artist,https://genius.com/Cole-davis-i-want-you-gone-lyrics,
+12015760,accepted,Moon,2025,Daniel Caesar,Daniel Caesar,featured,primary_artist,https://genius.com/Daniel-caesar-moon-lyrics,
+12316983,accepted,Sins of The Father,2025,Daniel Caesar,Daniel Caesar,featured,primary_artist,https://genius.com/Daniel-caesar-sins-of-the-father-lyrics,
+11465010,accepted,If Only I Could Wait,2025,Danielle Haim,Bon Iver,primary_artist,featured,https://genius.com/Bon-iver-if-only-i-could-wait-lyrics,
+11465007,accepted,Day One,2025,Dijon,Bon Iver,primary_artist,featured,https://genius.com/Bon-iver-day-one-lyrics,
+13070432,accepted,Flood,2026,Dua Saleh,Dua Saleh,featured,primary_artist,https://genius.com/Dua-saleh-flood-lyrics,
+13070441,accepted,Glow,2026,Dua Saleh,Dua Saleh,featured,primary_artist,https://genius.com/Dua-saleh-glow-lyrics,
+13075031,accepted,Keep Away,2026,Dua Saleh,Dua Saleh,featured,primary_artist,https://genius.com/Dua-saleh-keep-away-lyrics,
+7803978,accepted,So Unimportant,2022,Ethan Gruska,Ethan Gruska,featured,primary_artist,https://genius.com/Ethan-gruska-so-unimportant-lyrics,
+11465007,accepted,Day One,2025,Flock of Dimes,Bon Iver,primary_artist,featured,https://genius.com/Bon-iver-day-one-lyrics,
+2817345,accepted,Friends,2016,Francis and the Lights,Francis and the Lights,featured,primary_artist,https://genius.com/Francis-and-the-lights-friends-lyrics,
+3971637,accepted,Take Me to the Light,2019,Francis and the Lights,Francis and the Lights,featured,primary_artist,https://genius.com/Francis-and-the-lights-take-me-to-the-light-lyrics,
+5649388,accepted,You Still Take Me To the Light,2020,Francis and the Lights,Francis and the Lights,featured,primary_artist,https://genius.com/Francis-and-the-lights-you-still-take-me-to-the-light-lyrics,
+6808777,accepted,METTA WORLD PEACE,2021,Francis and the Lights,Francis and the Lights,featured,primary_artist,https://genius.com/Francis-and-the-lights-metta-world-peace-lyrics,
+9764037,rejected,Coral,,Frank Ocean,Bon Iver,primary_artist,featured,https://genius.com/Bon-iver-coral-lyrics,missing_release_year
+12869976,accepted,Sold Out,2025,Gracie Abrams,Gracie Abrams,featured,primary_artist,https://genius.com/Gracie-abrams-sold-out-lyrics,
+12522688,accepted,Tie you down,2025,HAIM,HAIM,featured,primary_artist,https://genius.com/Haim-tie-you-down-lyrics,
+9186157,accepted,Heart of Gold,2023,Ilsey,Ilsey,featured,primary_artist,https://genius.com/Ilsey-heart-of-gold-lyrics,
+9419948,accepted,On Wrong Side,2023,Ilsey,Ilsey,featured,primary_artist,https://genius.com/Ilsey-on-wrong-side-lyrics,
+91688,accepted,Fall Creek Boys Choir,2011,James Blake,James Blake,featured,primary_artist,https://genius.com/James-blake-fall-creek-boys-choir-lyrics,
+2467745,accepted,I Need a Forest Fire,2016,James Blake,James Blake,featured,primary_artist,https://genius.com/James-blake-i-need-a-forest-fire-lyrics,
+6006395,accepted,Jeanie,2020,Jim-E Stack,Jim-E Stack,featured,primary_artist,https://genius.com/Jim-e-stack-jeanie-lyrics,
+8434392,rejected,333,,Kanye West,Kanye West,featured,primary_artist,https://genius.com/Kanye-west-333-lyrics,missing_release_year
+8394138,rejected,Can’t Get Over Me,,Kanye West,Kanye West,featured,primary_artist,https://genius.com/Kanye-west-cant-get-over-me-lyrics,missing_release_year
+6098084,rejected,Fine Line,,Kanye West,Kanye West,featured,primary_artist,https://genius.com/Kanye-west-fine-line-lyrics,missing_release_year
+10944500,accepted,Hell Of A Life (Original),,Kanye West,Kanye West,featured,primary_artist,https://genius.com/Kanye-west-hell-of-a-life-original-lyrics,unreleased_or_fan_edit_risk;missing_release_year
+11043690,rejected,See Me Again [V10],,Kanye West,Kanye West,featured,primary_artist,https://genius.com/Kanye-west-see-me-again-v10-lyrics,unreleased_or_fan_edit_risk;missing_release_year
+8438585,rejected,See Me Again [V4],,Kanye West,Kanye West,featured,primary_artist,https://genius.com/Kanye-west-see-me-again-v4-lyrics,unreleased_or_fan_edit_risk;missing_release_year
+4453845,rejected,Shoot Up The Station,,Kanye West,Kanye West,featured,primary_artist,https://genius.com/Kanye-west-shoot-up-the-station-lyrics,missing_release_year
+13747287,accepted,Take Me To The Light [V6],,Kanye West,Kanye West,featured,primary_artist,https://genius.com/Kanye-west-take-me-to-the-light-v6-lyrics,unreleased_or_fan_edit_risk;missing_release_year
+1656,accepted,Lost In the World,2010,Kanye West,Kanye West,featured,primary_artist,https://genius.com/Kanye-west-lost-in-the-world-lyrics,
+1149,accepted,Monster,2010,Kanye West,Kanye West,featured,primary_artist,https://genius.com/Kanye-west-monster-lyrics,
+564499,rejected,I Cant,,Lil Animus,Lil Animus,featured,primary_artist,https://genius.com/Lil-animus-i-cant-lyrics,missing_release_year
+8840363,accepted,Kindness Will Follow Your Tears,2023,Lonnie Holley,Lonnie Holley,featured,primary_artist,https://genius.com/Lonnie-holley-kindness-will-follow-your-tears-lyrics,
+9217142,accepted,Marvel Room,2023,Rob Moose,Rob Moose,featured,primary_artist,https://genius.com/Rob-moose-marvel-room-lyrics,
+6527833,accepted,Catalog of Unabashed Gratitude,2021,Ross Gay,Ross Gay,featured,primary_artist,https://genius.com/Ross-gay-catalog-of-unabashed-gratitude-annotated,annotation_or_non_song_risk
+7616935,rejected,Feel the Same / I Need a Forest Fire (Mixed),2020,salute,salute,featured,primary_artist,https://genius.com/Salute-and-james-blake-feel-the-same-i-need-a-forest-fire-mixed-lyrics,mix_or_compilation_risk
+6260141,accepted,evermore,2020,Taylor Swift,Taylor Swift,featured,primary_artist,https://genius.com/Taylor-swift-evermore-lyrics,
+5793983,accepted,exile,2020,Taylor Swift,Taylor Swift,featured,primary_artist,https://genius.com/Taylor-swift-exile-lyrics,
+6206234,pending,exile (the long pond studio sessions),2020,Taylor Swift,Taylor Swift,featured,primary_artist,https://genius.com/Taylor-swift-exile-the-long-pond-studio-sessions-lyrics,alternate_or_live_version
+1857381,accepted,Down in the Willow Garden,2012,The Chieftains,The Chieftains,featured,primary_artist,https://genius.com/The-chieftains-down-in-the-willow-garden-lyrics,
+69630,accepted,Ashes in the Air,2013,The Flaming Lips,The Flaming Lips,featured,primary_artist,https://genius.com/The-flaming-lips-ashes-in-the-air-lyrics,
+8058208,accepted,Weird Goodbyes,2022,The National,The National,featured,primary_artist,https://genius.com/The-national-weird-goodbyes-lyrics,
+10679399,rejected,Shoot Up,2024,The Pastelle Collective (Yedits),The Pastelle Collective (Yedits),featured,primary_artist,https://genius.com/The-pastelle-collective-yedits-shoot-up-lyrics,unreleased_or_fan_edit_risk
+10679243,rejected,That’s My Bitch,2024,The Pastelle Collective (Yedits),The Pastelle Collective (Yedits),featured,primary_artist,https://genius.com/The-pastelle-collective-yedits-thats-my-bitch-lyrics,unreleased_or_fan_edit_risk
+9368607,accepted,DELRESTO (ECHOES) [Original],,Travis Scott,Travis Scott,featured,primary_artist,https://genius.com/Travis-scott-delresto-echoes-original-lyrics,unreleased_or_fan_edit_risk;missing_release_year
+13755313,rejected,Prayer,2019,Ye,Ye,featured,primary_artist,https://genius.com/Ye-kanye-west-and-momo-boyd-prayer-lyrics,
+9544477,accepted,Boys Of Faith,2023,Zach Bryan,Zach Bryan,featured,primary_artist,https://genius.com/Zach-bryan-boys-of-faith-lyrics,

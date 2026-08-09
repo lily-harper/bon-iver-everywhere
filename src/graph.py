@@ -1,11 +1,11 @@
 import json
 import math
+from html import escape
 
 import networkx as nx
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.express as px
 
 from src.artist_metadata import enrich_artists
 
@@ -14,6 +14,19 @@ HOP1_EDGE_COLOR = "#e74c3c"
 HOP2_EDGE_COLOR = "#95a5a6"
 HUB_NODE_COLOR = "#c0392b"
 
+DISPLAY_GENRE_COLORS = {
+    "Hip-hop / Rap": "#E45756",
+    "R&B / Soul": "#B279A2",
+    "Pop": "#F2CF5B",
+    "Rock / Alternative": "#4C78A8",
+    "Folk / Country": "#59A14F",
+    "Electronic / Dance": "#76B7B2",
+    "Jazz / Classical": "#FF9DA7",
+    "Global / Reggae": "#F28E2B",
+    "Experimental / Soundtrack": "#9C755F",
+    "Other / Unknown": "#79706E",
+}
+
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,11 +34,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <title>Bon Iver Collaboration Network</title>
   <style>
     body {{ margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #111; color: #eee; }}
-    #layout {{ display: flex; height: 100vh; }}
-    #plot-wrap {{ flex: 1; min-width: 0; }}
+    #layout {{ height: 100vh; }}
+    #plot-wrap {{ width: calc(100vw - 320px); height: 100vh; overflow: hidden; }}
     #panel {{
-      width: 360px; padding: 20px; background: #1a1a1a; border-left: 1px solid #333;
-      overflow-y: auto; box-sizing: border-box;
+      position: fixed; z-index: 1000; top: 0; right: 0; bottom: 0;
+      width: 320px; padding: 20px; background: #1a1a1a; border-left: 1px solid #333;
+      overflow-y: auto; box-sizing: border-box; contain: layout paint;
     }}
     #panel h2 {{ margin: 0 0 8px; font-size: 1.1rem; }}
     #panel .subtitle {{ color: #aaa; font-size: 0.85rem; margin-bottom: 16px; }}
@@ -37,6 +51,21 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     .path-step strong {{ color: #e74c3c; }}
     .legend {{ margin-top: 20px; font-size: 0.8rem; color: #aaa; }}
     .legend span {{ display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: middle; }}
+    #reset-view {{ background: #2b2b2b; color: #eee; border: 1px solid #555; border-radius: 5px; padding: 7px 10px; cursor: pointer; }}
+    #reset-view:hover {{ background: #3a3a3a; }}
+    .controls {{ display: flex; gap: 8px; margin-bottom: 10px; }}
+    .genre-key {{ display: grid; grid-template-columns: 14px 1fr; gap: 6px 8px; align-items: center; }}
+    .genre-key span {{ width: 12px; height: 12px; border-radius: 50%; }}
+    .genre-legend {{
+      position: sticky; z-index: 2; top: -20px; margin: 0 -20px 16px; padding: 12px 20px;
+      background: #1a1a1a; border-bottom: 1px solid #333;
+    }}
+    .genre-legend h3 {{ margin: 0 0 8px; color: #eee; }}
+    @media (max-width: 760px) {{
+      #plot-wrap {{ width: 100vw; height: 70vh; }}
+      #panel {{ position: absolute; top: 70vh; width: 100%; min-height: 30vh; border-left: 0; border-top: 1px solid #333; }}
+      .genre-legend {{ position: relative; top: auto; }}
+    }}
   </style>
 </head>
 <body>
@@ -45,12 +74,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <div id="panel">
       <h2 id="panel-title">Select a node</h2>
       <div class="subtitle" id="panel-subtitle">Click an artist to see their connection to Bon Iver.</div>
-      <div id="panel-body" class="empty">No artist selected.</div>
-      <div class="legend">
-        <p><span style="background:{hop1}"></span> 1 hop from Bon Iver</p>
-        <p><span style="background:{hop2}"></span> 2 hops from Bon Iver</p>
-        <p>Node color = main genre</p>
+      <div class="controls">
+        <button id="reset-view" type="button">Reset view</button>
       </div>
+      <p class="subtitle">Drag to rotate. Use the wheel or trackpad to zoom quickly.</p>
+      <div class="legend genre-legend">
+        <h3>Node colors</h3>
+        <div class="genre-key">{genre_legend}</div>
+        <p>First-hop line width = number of shared recordings. Line length increases with the collaborator's downstream connections.</p>
+        <p>Use the graph legend to independently show or hide connection lines and node layers.</p>
+      </div>
+      <div id="panel-body" class="empty">No artist selected.</div>
     </div>
   </div>
   <script>
@@ -100,11 +134,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
       title.textContent = name;
       if (info.direct && info.direct.length) {{
-        subtitle.textContent = "Direct collaborator · " + (info.genre || "unknown genre");
+        subtitle.textContent = "Direct collaborator · " + (info.display_genre || "Other / Unknown");
       }} else if (info.path && info.path.length) {{
-        subtitle.textContent = (info.path.length + 1) + " hops from Bon Iver · " + (info.genre || "unknown genre");
+        subtitle.textContent = (info.path.length + 1) + " hops from Bon Iver · " + (info.display_genre || "Other / Unknown");
       }} else {{
-        subtitle.textContent = info.genre ? "Main genre: " + info.genre : "";
+        subtitle.textContent = info.display_genre ? "Genre: " + info.display_genre : "";
       }}
 
       let html = "";
@@ -124,6 +158,34 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     }}
 
     const plotDiv = document.getElementById("collab-graph");
+    const INITIAL_CAMERA = {{ eye: {{ x: 1.25, y: 1.25, z: 1.0 }} }};
+    let currentCamera = INITIAL_CAMERA;
+
+    plotDiv.on("plotly_relayout", function(update) {{
+      if (update["scene.camera"]) currentCamera = update["scene.camera"];
+    }});
+
+    plotDiv.addEventListener("wheel", function(event) {{
+      event.preventDefault();
+      const eye = (currentCamera && currentCamera.eye) || INITIAL_CAMERA.eye;
+      const distance = Math.hypot(eye.x, eye.y, eye.z);
+      const amount = Math.min(Math.abs(event.deltaY), 40);
+      const factor = Math.exp(Math.sign(event.deltaY) * amount * 0.012);
+      const nextDistance = Math.max(0.35, Math.min(8, distance * factor));
+      const scale = nextDistance / distance;
+      const nextCamera = {{
+        ...currentCamera,
+        eye: {{ x: eye.x * scale, y: eye.y * scale, z: eye.z * scale }}
+      }};
+      currentCamera = nextCamera;
+      Plotly.relayout(plotDiv, {{ "scene.camera": nextCamera }});
+    }}, {{ passive: false }});
+
+    document.getElementById("reset-view").addEventListener("click", function() {{
+      currentCamera = INITIAL_CAMERA;
+      Plotly.relayout(plotDiv, {{ "scene.camera": INITIAL_CAMERA }});
+    }});
+
     plotDiv.on("plotly_click", function(event) {{
       if (!event.points || !event.points.length) return;
       const point = event.points[0];
@@ -263,6 +325,7 @@ def build_click_data(
 
         click_data[artist] = {
             "genre": genre_map.get(artist, "unknown"),
+            "display_genre": collapse_genre(genre_map.get(artist, "unknown")),
             "direct": direct,
             "path": path_steps,
         }
@@ -270,12 +333,39 @@ def build_click_data(
     return click_data
 
 
+def collapse_genre(genre: str) -> str:
+    value = str(genre or "").strip().casefold()
+    if not value or value in {"unknown", "none", "nan", "person", "group", "other"}:
+        return "Other / Unknown"
+
+    categories = (
+        ("Hip-hop / Rap", ("hip hop", "hip-hop", "rap", "trap", "drill", "boom bap", "horrorcore")),
+        ("R&B / Soul", ("r&b", "rnb", "soul", "funk")),
+        ("Folk / Country", ("folk", "country", "americana", "bluegrass", "old-time", "celtic", "fiddling", "western")),
+        ("Electronic / Dance", ("electronic", "electronica", "dance", "house", "edm", "trance", "ambient", "downtempo", "trip-hop", "synth", "electro", "chillwave")),
+        ("Pop", ("pop", "bedroom")),
+        ("Rock / Alternative", ("rock", "indie", "alternative", "metal", "psychedelia")),
+        ("Jazz / Classical", ("jazz", "classical", "composer", "swing", "blues", "choir", "gospel")),
+        ("Global / Reggae", ("reggae", "dancehall", "afrobeat", "latin", "mexicano", "k-pop", "v-pop")),
+        ("Experimental / Soundtrack", ("experimental", "soundtrack", "production music", "new age")),
+    )
+    for category, terms in categories:
+        if any(term in value for term in terms):
+            return category
+    return "Other / Unknown"
+
+
 def build_network(collab_df: pd.DataFrame, artists_df: pd.DataFrame) -> nx.Graph:
     genre_map = artists_df.set_index("artist_name")["main_genre"].to_dict()
     graph = nx.Graph()
 
     for artist in graph_artists(collab_df):
-        graph.add_node(artist, main_genre=genre_map.get(artist, "unknown"))
+        raw_genre = genre_map.get(artist, "unknown")
+        graph.add_node(
+            artist,
+            main_genre=raw_genre,
+            display_genre=collapse_genre(raw_genre),
+        )
 
     pair_df = aggregate_artist_pairs(collab_df)
     for _, row in pair_df.iterrows():
@@ -291,22 +381,99 @@ def build_network(collab_df: pd.DataFrame, artists_df: pd.DataFrame) -> nx.Graph
 
 
 def _genre_color_map(artists_df: pd.DataFrame) -> dict[str, str]:
-    genres = sorted(artists_df["main_genre"].fillna("unknown").unique())
-    palette = px.colors.qualitative.Alphabet + px.colors.qualitative.Dark24
-    return {genre: palette[index % len(palette)] for index, genre in enumerate(genres)}
+    return DISPLAY_GENRE_COLORS.copy()
 
 
 def _layout_3d(graph: nx.Graph, hub_artist: str = HUB_ARTIST) -> dict:
-    positions = nx.spring_layout(graph, dim=3, seed=42, k=1.2 / math.sqrt(max(len(graph.nodes), 1)))
+    positions = nx.spring_layout(
+        graph,
+        dim=3,
+        seed=42,
+        k=3.0 / math.sqrt(max(len(graph.nodes), 1)),
+        iterations=200,
+        scale=2.5,
+    )
     if hub_artist in positions:
+        hub_position = positions[hub_artist].copy()
+        positions = {name: position - hub_position for name, position in positions.items()}
+        first_hop = set(graph.neighbors(hub_artist))
         positions[hub_artist] = np.array([0.0, 0.0, 0.0])
+
+        for name in first_hop:
+            position = positions[name]
+            distance = np.linalg.norm(position)
+            if distance == 0:
+                continue
+            downstream_connections = graph.degree[name] - 1
+            branch_spacing = min(
+                2.2,
+                math.log1p(max(downstream_connections, 0)) * 0.45,
+            )
+            positions[name] = position / distance * (2.4 + branch_spacing)
+
+        for name in set(graph) - first_hop - {hub_artist}:
+            position = positions[name]
+            distance = np.linalg.norm(position)
+            if distance == 0:
+                continue
+            parent_radii = [
+                np.linalg.norm(positions[neighbor])
+                for neighbor in graph.neighbors(name)
+                if neighbor in first_hop
+            ]
+            minimum_radius = max([3.2, *(radius + 0.8 for radius in parent_radii)])
+            if distance < minimum_radius:
+                positions[name] = position / distance * minimum_radius
     return positions
 
 
 def _node_size(artist: str, degree: int) -> float:
     if artist == HUB_ARTIST:
-        return 14
+        return 28
     return 6 + min(degree, 8)
+
+
+def _first_hop_edge_width(weight: int) -> float:
+    return min(11.0, 2.0 + 1.8 * math.sqrt(max(weight, 1)))
+
+
+def _node_hover_text(
+    artist: str,
+    graph: nx.Graph,
+    click_data: dict,
+    hub_artist: str = HUB_ARTIST,
+) -> str:
+    display_genre = escape(graph.nodes[artist].get("display_genre", "Other / Unknown"))
+    raw_genre = escape(str(graph.nodes[artist].get("main_genre", "unknown")))
+    lines = [f"<b>{escape(artist)}</b>", f"Genre: {display_genre}"]
+    if raw_genre.casefold() != display_genre.casefold():
+        lines.append(f"Source label: {raw_genre}")
+
+    if artist == hub_artist:
+        lines.append("Center of the collaboration network")
+        return "<br>".join(lines)
+
+    info = click_data.get(artist, {})
+    direct = info.get("direct", [])
+    if direct:
+        lines.append(f"<b>Directly connected to {escape(hub_artist)} by:</b>")
+        for track in direct[:4]:
+            lines.append(f"• {escape(str(track['track']))} ({escape(str(track['year']))})")
+        if len(direct) > 4:
+            lines.append(f"• +{len(direct) - 4} more")
+    elif info.get("path"):
+        lines.append(f"<b>Path to {escape(hub_artist)}:</b>")
+        for step in info["path"]:
+            track_names = ", ".join(
+                escape(str(track["track"])) for track in step.get("tracks", [])[:2]
+            ) or "unknown recording"
+            lines.append(
+                f"{escape(step['from'])} → {escape(step['to'])}: {track_names}"
+            )
+    else:
+        lines.append(f"No verified path to {escape(hub_artist)}")
+
+    return "<br>".join(lines)
 
 
 def _edge_hover_text(tracks: list[dict]) -> str:
@@ -321,7 +488,16 @@ def _edge_hover_text(tracks: list[dict]) -> str:
     return "<br>".join(lines)
 
 
-def _add_edge_trace(fig, positions, edges, color, name, width=2):
+def _add_edge_trace(
+    fig,
+    positions,
+    edges,
+    color,
+    name,
+    width=2,
+    showlegend=True,
+    legendgroup=None,
+):
     x_lines, y_lines, z_lines = [], [], []
     hover_x, hover_y, hover_z, hover_text = [], [], [], []
 
@@ -346,7 +522,8 @@ def _add_edge_trace(fig, positions, edges, color, name, width=2):
             line=dict(color=color, width=width),
             hoverinfo="skip",
             name=name,
-            showlegend=True,
+            showlegend=showlegend,
+            legendgroup=legendgroup or name,
         )
     )
 
@@ -361,6 +538,7 @@ def _add_edge_trace(fig, positions, edges, color, name, width=2):
             hovertext=hover_text,
             name=f"{name} (tracks)",
             showlegend=False,
+            legendgroup=legendgroup or name,
         )
     )
 
@@ -383,67 +561,136 @@ def draw_interactive_graph(
             hop2_edges.append((source, target, data))
 
     fig = go.Figure()
-    _add_edge_trace(fig, positions, hop2_edges, HOP2_EDGE_COLOR, "2 hops from Bon Iver", width=1.5)
-    _add_edge_trace(fig, positions, hop1_edges, HOP1_EDGE_COLOR, "1 hop from Bon Iver", width=3)
-
-    node_names = list(graph.nodes)
-    node_x = [positions[name][0] for name in node_names]
-    node_y = [positions[name][1] for name in node_names]
-    node_z = [positions[name][2] for name in node_names]
-    node_colors = [
-        HUB_NODE_COLOR
-        if name == hub_artist
-        else genre_colors.get(graph.nodes[name].get("main_genre", "unknown"), "#888888")
-        for name in node_names
-    ]
-    node_sizes = [_node_size(name, graph.degree[name]) for name in node_names]
-    node_hover = [
-        f"<b>{name}</b><br>Genre: {graph.nodes[name].get('main_genre', 'unknown')}<br>Click for Bon Iver details"
-        for name in node_names
-    ]
-
-    fig.add_trace(
-        go.Scatter3d(
-            x=node_x,
-            y=node_y,
-            z=node_z,
-            mode="markers+text",
-            text=node_names,
-            textposition="top center",
-            textfont=dict(size=8, color="#dddddd"),
-            marker=dict(
-                size=node_sizes,
-                color=node_colors,
-                line=dict(width=0.5, color="#ffffff"),
-            ),
-            hovertext=node_hover,
-            hoverinfo="text",
-            customdata=node_names,
-            name="Artists",
-            showlegend=False,
+    _add_edge_trace(fig, positions, hop2_edges, HOP2_EDGE_COLOR, "Second-hop lines", width=1.5)
+    for index, edge in enumerate(
+        sorted(hop1_edges, key=lambda item: (item[0], item[1]))
+    ):
+        _add_edge_trace(
+            fig,
+            positions,
+            [edge],
+            HOP1_EDGE_COLOR,
+            "First-hop lines",
+            width=_first_hop_edge_width(int(edge[2].get("weight", 1))),
+            showlegend=index == 0,
+            legendgroup="First-hop lines",
         )
+
+    first_hop_names = [
+        name
+        for name in graph.nodes
+        if name != hub_artist and graph.has_edge(hub_artist, name)
+    ]
+    second_hop_names = [
+        name
+        for name in graph.nodes
+        if name != hub_artist and name not in first_hop_names
+    ]
+
+    def add_node_trace(
+        names: list[str],
+        trace_name: str,
+        show_labels: bool,
+        outline_color: str,
+        outline_width: float,
+        show_in_legend: bool = True,
+    ) -> None:
+        fig.add_trace(
+            go.Scatter3d(
+                x=[positions[name][0] for name in names],
+                y=[positions[name][1] for name in names],
+                z=[positions[name][2] for name in names],
+                mode="markers+text" if show_labels else "markers",
+                text=names if show_labels else None,
+                textposition="top center",
+                textfont=dict(size=8, color="#dddddd"),
+                marker=dict(
+                    size=[_node_size(name, graph.degree[name]) for name in names],
+                    color=[
+                        HUB_NODE_COLOR
+                        if name == hub_artist
+                        else genre_colors.get(
+                            graph.nodes[name].get("display_genre", "Other / Unknown"),
+                            "#888888",
+                        )
+                        for name in names
+                    ],
+                    line=dict(width=outline_width, color=outline_color),
+                ),
+                hovertext=[
+                    _node_hover_text(name, graph, click_data, hub_artist=hub_artist)
+                    for name in names
+                ],
+                hoverinfo="text",
+                customdata=names,
+                name=trace_name,
+                showlegend=show_in_legend,
+                legendgroup=trace_name,
+            )
+        )
+
+    add_node_trace(
+        second_hop_names,
+        "Second-hop nodes",
+        show_labels=False,
+        outline_color="#ffffff",
+        outline_width=0.5,
+    )
+    add_node_trace(
+        first_hop_names,
+        "First-hop nodes",
+        show_labels=True,
+        outline_color=HOP1_EDGE_COLOR,
+        outline_width=4,
+    )
+    add_node_trace(
+        [hub_artist],
+        hub_artist,
+        show_labels=True,
+        outline_color="#ffffff",
+        outline_width=1,
+        show_in_legend=False,
     )
 
     fig.update_layout(
         title="Bon Iver Collaboration Network (3D · 2-hop featured credits)",
         showlegend=True,
-        legend=dict(x=0.01, y=0.99, bgcolor="rgba(0,0,0,0.5)", font=dict(color="white")),
+        legend=dict(
+            title=dict(text="Click to show / hide"),
+            x=0.01,
+            y=0.99,
+            bgcolor="rgba(0,0,0,0.65)",
+            font=dict(color="white"),
+            groupclick="togglegroup",
+            itemclick="toggle",
+            itemdoubleclick="toggleothers",
+        ),
         scene=dict(
             xaxis=dict(visible=False),
             yaxis=dict(visible=False),
             zaxis=dict(visible=False),
             bgcolor="#111111",
+            camera=dict(eye=dict(x=1.25, y=1.25, z=1.0)),
+            dragmode="orbit",
+            aspectmode="cube",
         ),
         paper_bgcolor="#111111",
         font=dict(color="#eeeeee"),
         margin=dict(l=0, r=0, t=50, b=0),
     )
 
-    plot_html = fig.to_html(include_plotlyjs="cdn", div_id="collab-graph", full_html=False)
+    plot_html = fig.to_html(
+        include_plotlyjs="cdn",
+        div_id="collab-graph",
+        full_html=False,
+        config={"scrollZoom": False, "displaylogo": False, "responsive": True},
+    )
     html = HTML_TEMPLATE.format(
         plot=plot_html,
-        hop1=HOP1_EDGE_COLOR,
-        hop2=HOP2_EDGE_COLOR,
+        genre_legend="".join(
+            f'<span style="background:{color}"></span><div>{escape(genre)}</div>'
+            for genre, color in genre_colors.items()
+        ),
         hub_json=json.dumps(hub_artist),
         data_json=json.dumps(click_data),
     )
@@ -462,6 +709,7 @@ def build_graph_outputs(
 ) -> tuple[pd.DataFrame, pd.DataFrame, nx.Graph, pd.DataFrame]:
     collab_df = dedupe_collaborations(load_collaborations(collaborations_path))
     artists_df = enrich_artists(graph_artists(collab_df), cache_path=artists_path)
+    artists_df["display_genre"] = artists_df["main_genre"].map(collapse_genre)
     genre_map = artists_df.set_index("artist_name")["main_genre"].to_dict()
     genre_colors = _genre_color_map(artists_df)
 
